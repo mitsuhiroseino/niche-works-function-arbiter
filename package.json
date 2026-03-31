@@ -1,0 +1,51 @@
+{
+  "name": "@niche-works/function-arbiter",
+  "version": "0.1.0",
+  "keywords": [
+    "function"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitsuhiroseino/niche-works-function-arbiter.git"
+  },
+  "license": "MIT",
+  "author": "Mitsuhiro Seino",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts",
+    "./constants": "./src/constants.ts",
+    "./*/constants": "./src/*/constants.ts"
+  },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "scripts": {
+    "build": "npm run check && rimraf dist && vite build",
+    "check": "tsc --noEmit",
+    "dev": "vite",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "indexes": "tsx scripts/indexes.ts",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tidy": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\" --config ./prettier.tidy.config.js"
+  },
+  "dependencies": {
+    "@niche-works/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "glob": "^13.0.6",
+    "prettier": "^3.8.1",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-packagejson": "^3.0.2",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.6",
+    "tslib": "^2.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.1.2"
+  },
+  "packageManager": "pnpm@10.32.1"
+}
