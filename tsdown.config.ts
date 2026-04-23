@@ -1,3 +1,4 @@
+import createExternalOptionFunction from '@niche-works/dev/createExternalOptionFunction';
 import distPackage from '@niche-works/rollup-plugin-dist-package';
 import { defineConfig } from 'tsdown';
 
@@ -15,14 +16,7 @@ export default defineConfig({
   outDir: 'dist',
   minify: false,
   inputOptions: {
-    external(id, _importer, isResolved) {
-      if (!isResolved) {
-        // 相対パスでもなく、srcディレクトリ配下でもないものはnode_modules配下のモジュール
-        return (
-          !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('src/')
-        );
-      }
-    },
+    external: createExternalOptionFunction(),
   },
   outputOptions: {
     preserveModules: true,
@@ -49,6 +43,14 @@ export default defineConfig({
           './*/constants': {
             import: './*/constants.mjs',
             require: './*/constants.cjs',
+          },
+          './types': {
+            import: './types.mjs',
+            require: './types.cjs',
+          },
+          './*/types': {
+            import: './*/types.mjs',
+            require: './*/types.cjs',
           },
         },
       },

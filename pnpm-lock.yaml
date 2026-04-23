@@ -16,8 +16,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@niche-works/dev':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.0
+        version: 0.4.2
       '@niche-works/rollup-plugin-dist-package':
         specifier: ^0.1.0
         version: 0.1.0(rollup@4.60.2)
@@ -265,8 +265,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@niche-works/dev@0.3.0':
-    resolution: {integrity: sha512-Fl2g4LjAWw3zkSe2pYfWu9fPCJxPk919goVcht2/qvrdW1WbfToRk5LKwrWXL2zI/3MJFFPjEooljo/hnK5YvA==}
+  '@niche-works/dev@0.4.2':
+    resolution: {integrity: sha512-/CDANcCbfkIFElfCJQO1wgxVT0Uy6+CebEjkouMFWSBDekEn8Y/mDqVn6pXwWK5LXbYgkcUvLDW1v0DnfQWprw==}
 
   '@niche-works/rollup-plugin-dist-package@0.1.0':
     resolution: {integrity: sha512-QvoZn8NY5gTvsVlnWUQHxGoam9xPRmgQQmT/KNquEIblap5mXkMKz/lrzLWidUTMYoG6RmxB/IYoDxZrAO0x+w==}
@@ -1422,11 +1422,12 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@niche-works/dev@0.3.0':
+  '@niche-works/dev@0.4.2':
     dependencies:
+      fast-glob: 3.3.3
       fs-extra: 11.3.4
       remeda: 2.33.7
-      tslib: 2.8.1
+      type-fest: 5.6.0
 
   '@niche-works/rollup-plugin-dist-package@0.1.0(rollup@4.60.2)':
     dependencies:
