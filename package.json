@@ -35,7 +35,7 @@
     "@niche-works/rollup-plugin-dist-package": "^0.1.0",
     "@types/node": "^25.5.0",
     "fast-glob": "^3.3.3",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-packagejson": "^3.0.2",
     "rimraf": "^6.1.3",

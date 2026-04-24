@@ -48,10 +48,6 @@ export default defineConfig({
             import: './types.mjs',
             require: './types.cjs',
           },
-          './*/types': {
-            import: './*/types.mjs',
-            require: './*/types.cjs',
-          },
         },
       },
     }),
