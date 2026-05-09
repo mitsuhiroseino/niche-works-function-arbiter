@@ -1,4 +1,5 @@
 import type { LooseFunction } from '@niche-works/types';
+import type { MethodKeys, MethodType } from '../_types';
 import { CANCEL } from '../constants';
 import type {
   ArbiterFunction,
@@ -24,6 +25,9 @@ export default abstract class FunctionArbiterBase<
    */
   private _id: string;
 
+  /**
+   * キャンセル時の動作
+   */
   private _cancelPolicy: CancelPolicy;
 
   /**
@@ -98,25 +102,24 @@ export default abstract class FunctionArbiterBase<
   }
 
   /**
-   * 関数をラップする
+   * cancelPolicyに従ってPromiseを解決する関数を作成する共通処理
    *
-   * @param fn
+   * `wrap` と `wrapMethod` でcancelPolicyの処理が重複しないよう切り出したもの。
+   * scopeがnullの場合は呼び出し時点の`this`をscopeとして使用する。
+   *
+   * @param wrapedFn ラップ済みの関数
+   * @param scope 固定するスコープ。nullの場合は呼び出し時点のthisを使用する
    * @returns
    */
-  wrap<T extends LooseFunction>(
-    fn: T | null | undefined,
-  ): AwaitedReturnFunction<T> | undefined {
-    if (!fn) {
-      return undefined;
-    }
-
-    const me = this;
-    const wrapedFn = me._wrap(fn);
-    const cancelPolicy = me._cancelPolicy;
+  private _applyPolicy<T extends LooseFunction>(
+    wrapedFn: ArbiterFunction<T>,
+    scope: unknown | null,
+  ): AwaitedReturnFunction<T> {
+    const cancelPolicy = this._cancelPolicy;
 
     return function (this: unknown, ...args: Parameters<T>): AwaitedReturn<T> {
       return new Promise((resolve, reject) => {
-        wrapedFn(this, args)
+        wrapedFn(scope ?? this, args)
           .then((result) => {
             if (cancelPolicy === 'resolve') {
               // キャンセルをresolveで受け取る場合
@@ -138,6 +141,49 @@ export default abstract class FunctionArbiterBase<
           .catch(reject);
       });
     };
+  }
+
+  /**
+   * 関数をラップする
+   *
+   * @param fn
+   * @returns
+   */
+  wrap<T extends LooseFunction>(
+    fn: T | null | undefined,
+  ): AwaitedReturnFunction<T> | undefined {
+    if (!fn) {
+      return undefined;
+    }
+
+    // scopeをnullにすることで、呼び出し時点のthisをscopeとして使用する
+    return this._applyPolicy(this._wrap(fn), null);
+  }
+
+  /**
+   * インスタンスのメソッドをラップする
+   *
+   * `wrap` と異なりscopeをinstanceに固定するため、
+   * ユーザーがbindを意識する必要がない。
+   *
+   * @param instance メソッドを持つインスタンス
+   * @param method メソッド名
+   * @returns
+   */
+  wrapMethod<TInstance extends object, TKey extends MethodKeys<TInstance>>(
+    instance: TInstance,
+    method: TKey,
+  ): AwaitedReturnFunction<MethodType<TInstance, TKey>> | undefined {
+    const fn = instance[method];
+    if (typeof fn !== 'function') {
+      return undefined;
+    }
+
+    // scopeをinstanceに固定することで、メソッドのthisが失われない
+    return this._applyPolicy(
+      this._wrap(fn as LooseFunction),
+      instance,
+    ) as AwaitedReturnFunction<MethodType<TInstance, TKey>>;
   }
 
   /**
